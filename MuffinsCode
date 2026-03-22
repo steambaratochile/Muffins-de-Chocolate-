@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Muffins de Chocolate</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fdf5e6;
+            color: #4a2c2a;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 { text-align: center; color: #7b3f00; margin-bottom: 10px; }
+        .multiplier {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        input[type="number"] {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid #7b3f00;
+            border-radius: 5px;
+            font-size: 1.1em;
+            text-align: center;
+        }
+        ul { list-style: none; padding: 0; }
+        li {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            transition: 0.3s;
+        }
+        li:hover { background-color: #fffaf0; }
+        input[type="checkbox"] {
+            margin-right: 15px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #7b3f00;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: #a0a0a0;
+        }
+        .amount { font-weight: bold; color: #d35400; }
+        .instructions {
+            margin-top: 20px;
+            font-size: 0.9em;
+            background: #f9f9f9;
+            padding: 15px;
+            border-left: 5px solid #7b3f00;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🧁 Muffins de Chocolate</h1>
+    
+    <div class="multiplier">
+        <span>¿Cuántas veces harás la receta?</span>
+        <input type="number" id="multiplier" value="1" min="1" oninput="updateAmounts()">
+    </div>
+
+    <ul id="ingredient-list">
+        </ul>
+
+    <div class="instructions">
+        <strong>Horneado:</strong> 180°C (arriba y abajo, sin ventilador) durante 40 minutos.
+    </div>
+</div>
+
+<script>
+    const baseIngredients = [
+        { name: "Huevos grandes", amount: 2, unit: "unid." },
+        { name: "Azúcar moreno", amount: 240, unit: "g" },
+        { name: "Aceite de oliva suave", amount: 100, unit: "ml" },
+        { name: "Yogur griego natural", amount: 220, unit: "g" },
+        { name: "Pasta de vainilla", amount: 1, unit: "cucharadita" },
+        { name: "Harina de trigo común", amount: 180, unit: "g" },
+        { name: "Cacao en polvo sin azúcar", amount: 60, unit: "g" },
+        { name: "Levadura en polvo", amount: 1.5, unit: "cucharaditas" },
+        { name: "Bicarbonato de sodio", amount: 0.5, unit: "cucharadita" },
+        { name: "Sal", amount: 1, unit: "pizca" },
+        { name: "Agua hirviendo", amount: 30, unit: "ml" },
+        { name: "Chispas de chocolate negro", amount: 120, unit: "g" }
+    ];
+
+    function updateAmounts() {
+        const mult = parseFloat(document.getElementById('multiplier').value) || 1;
+        const list = document.getElementById('ingredient-list');
+        list.innerHTML = "";
+
+        baseIngredients.forEach((ing, index) => {
+            const total = (ing.amount * mult).toLocaleString('es-ES');
+            const li = document.createElement('li');
+            
+            li.innerHTML = `
+                <input type="checkbox" id="ing-${index}" onclick="toggleLabel(this)">
+                <label for="ing-${index}">
+                    <span class="amount">${total} ${ing.unit}</span> de ${ing.name}
+                </label>
+            `;
+            list.appendChild(li);
+        });
+    }
+
+    function toggleLabel(checkbox) {
+        const label = checkbox.nextElementSibling;
+        if (checkbox.checked) {
+            label.classList.add('completed');
+        } else {
+            label.classList.remove('completed');
+        }
+    }
+
+    // Inicializar la lista al cargar
+    updateAmounts();
+</script>
+
+</body>
+</html>
